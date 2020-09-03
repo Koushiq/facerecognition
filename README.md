@@ -9,7 +9,7 @@ In this repo i will be storing the basics of using face recognition using python
 
 
 * to install opencv use 
- 1. sudo pip3 install opecv-python
+ 1. sudo apt-get install python3-opencv
 
 * If you get an error cannot open shared file : no such file or directory then install the following command
   1. sudo apt-get install libatlas-base-dev
