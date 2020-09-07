@@ -3,6 +3,11 @@ import cv2
 import numpy as np
 import get_files as files
 import time
+import email_with_files as mail
+from datetime import datetime
+from datetime import timedelta
+import multiprocessing
+
 
 def triggerFaceDetection():
     video_capture = cv2.VideoCapture(0)
@@ -14,7 +19,10 @@ def triggerFaceDetection():
     faceNames=[]
 
     processFrame = True
-
+    sendMail = True
+    
+    endTimeKnownface=0
+    endTimeUnknownface=0
     images = files.get_dir_files('imgs')
 
     print (images)
@@ -22,7 +30,7 @@ def triggerFaceDetection():
     knownFaceNames=files.get_file_name_all('imgs')
     print (knownFaceNames)
 
-
+    snapTaken=False
     for path in images:
         knownImage = face_recognition.load_image_file("imgs/"+path)
         knownFaceEncodings.append(face_recognition.face_encodings(knownImage)[0])
@@ -71,8 +79,40 @@ def triggerFaceDetection():
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
             
             print("name is :" + name)
+            snapTaken=True
             
+            print("current time")
+            print(datetime.now())
             
+            print("target time")
+            print(endTimeKnownface)
+            # send next mail 30 seconds after sending the first mail
+            if endTimeKnownface != 0 and datetime.now()>endTimeKnownface:
+                sendMail=True
+                endTimeKnownface=0
+            
+            #checing both flags to save snap and send mail
+            print("snaptaken")
+            print(snapTaken)
+            print("sendMail")
+            print(sendMail)
+            if snapTaken==True and sendMail==True:
+                cv2.imwrite('snaps/snap.jpg',frame)
+                if name is not "Unrecognized":
+                    p = multiprocessing.Process(target=mail.mail, args=('snaps',name+"is at your door !"))
+                    p.start()
+                    #mail.mail('snaps',name+"is at your door!")
+                    endTimeKnownface=datetime.now() + timedelta(seconds=30)
+                    #print(endTimeKnownface)
+                else:
+                    p = multiprocessing.Process(target=mail.mail, args=('snaps',"An Possible Unknown Person is at your door "))
+                    p.start()
+                    #mail.mail('snaps',name+"is at your door!")
+                    endTimeKnownface=datetime.now() + timedelta(seconds=15)
+                    #print(endTimeKnownface)
+                sendMail=False
+                snapTaken=False    
+                    
         cv2.imshow('Video',frame)
 
 
