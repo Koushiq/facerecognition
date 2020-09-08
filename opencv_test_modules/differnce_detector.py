@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 import time
-import multiprocessing 
+import multiprocessing
+import email_with_files as mail
 from datetime import datetime
 from datetime import timedelta  
 
@@ -23,20 +24,24 @@ def triggerCam():
         cv2.imshow('Preview Window',frame)
         
         now = datetime.now()
-        current_time = now.strftime("%S")
-        if int(current_time)%10 ==5 and not startRec:
+        """current_time = now.strftime("%S")
+        if int(current_time)%10 ==1 and not startRec:
             cv2.imwrite('FrameOne.jpg',frame)
             f1Snapped=True
             
-        if int(current_time)%10 ==4 and not startRec:
+        if int(current_time)%10 ==9 and not startRec:
             cv2.imwrite('FrameTwo.jpg',frame)
             f2Snapped=True
+       """
         
+        ret1, frame1 = cap.read()
         
-        if f1Snapped and f2Snapped and not startRec:
+        ret2, frame2 = cap.read()
+        
+        if  not startRec:
             print("Comparing Frames!")
-            frame1= cv2.imread('FrameOne.jpg')
-            frame2= cv2.imread('FrameTwo.jpg')
+            #frame1= cv2.imread('FrameOne.jpg')
+            #frame2= cv2.imread('FrameTwo.jpg')
             
             diff = cv2.subtract(frame1,frame2)
             #line added for debugging purpose 
@@ -48,10 +53,14 @@ def triggerCam():
             print(cv2.countNonZero(g))
             print(cv2.countNonZero(r))
             
+            if cv2.countNonZero(b)>200000 or cv2.countNonZero(g)>200000 or cv2.countNonZero(r)>200000:
+                print("send email bruh")
+                startRec= True
+                endTime=datetime.now() + timedelta(seconds=4)
             #set Rec Flag to True
             
-            endTime=datetime.now() + timedelta(seconds=4)
-            f1Snapped,f2Snapped=False,False
+            
+            #f1Snapped,f2Snapped=False,False
             #startRec=True
         
         if startRec==True:
@@ -67,7 +76,8 @@ def triggerCam():
                 startRec=False
                 out.release()
                 print("Video Wrote!")
-        
+                p=multiprocessing.Process(target=mail.mail,args=('recs',"Possible Suspicisios Activity") )
+                p.start()
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
