@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import filedialog,ttk
 import get_files
 import shutil
+from PIL import ImageTk,Image
+import glob
 
 root = tk.Tk()
 root.title("Smart Security Camera")
@@ -12,7 +14,8 @@ name = tk.StringVar()
 time = tk.IntVar()
 msg = tk.StringVar()
 msg2 = tk.StringVar()
-# msg2.set("NULL")
+image_list = []
+res_list = []
 def switchOn():
     for widget in frame.winfo_children():
         widget.destroy()
@@ -108,7 +111,32 @@ def setTime():
 def getTime(t):
     # NOTE: MUST USE THIS t NOT time for delay...
     return(t)
+def viewImages():
+    for filename in glob.glob('/home/pi/Desktop/habiba-dev/img/known/*.jpg'):
+        img = Image.open(filename)
+        image_list.append(img)
+    newWindow3 = tk.Toplevel(root)
+    newWindow3.title("Known Faces")
+    newWindow3.resizable(False, False)
+    newWindow3.geometry("+150+20")
+    canvas4 = tk.Canvas(newWindow3,height=500,width=500,bg="white")
+    canvas4.pack()
+    frame4 = tk.Frame(newWindow3,bg="white")
+    frame4.place(relwidth=1, relheight=1)
+    
+    for im in image_list:
+        h=400
+        w=int(h/im.height*im.width)
+        im = im.resize((w,h))
+        res_list.append(im)
         
+    photo = ImageTk.PhotoImage(res_list[0])
+    label7 = tk.Label(frame4,image=photo)
+    label7.image = photo
+    label7.place(x=140,y=50)
+    prev = tk.Button(root,text="View Known", padx=10 , pady=5, fg="white", bg="grey", command=viewImages)
+    prev.place(x=190, y=130)
+
 canvas = tk.Canvas(root,height=200,width=500,bg="grey")
 canvas.pack()
 
@@ -126,9 +154,12 @@ modeOff = tk.Button(root,text="Default Mode", padx=10 , pady=5, fg="white", bg="
 modeOff.place(x=250, y=90)
 
 addKnown = tk.Button(root,text="Add Known", padx=10 , pady=5, fg="white", bg="grey", command=add)
-addKnown.place(x=140, y=130)
+addKnown.place(x=80, y=130)
+
+viewKnown = tk.Button(root,text="View Known", padx=10 , pady=5, fg="white", bg="grey", command=viewImages)
+viewKnown.place(x=190, y=130)
 
 delay = tk.Button(root,text="Select Delay", padx=10 , pady=5, fg="white", bg="grey", command=selectDelay)
-delay.place(x=250, y=130)
+delay.place(x=305, y=130)
 
 root.mainloop()
