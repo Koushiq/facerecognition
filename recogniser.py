@@ -9,6 +9,7 @@ from datetime import timedelta
 import multiprocessing
 
 
+
 def triggerFaceDetection():
     video_capture = cv2.VideoCapture(0)
     knownFaceEncodings=[]
@@ -23,16 +24,16 @@ def triggerFaceDetection():
     
     endTimeKnownface=0
     endTimeUnknownface=0
-    images = files.get_dir_files('imgs')
+    images = files.get_dir_files('img/known')
 
     print (images)
 
-    knownFaceNames=files.get_file_name_all('imgs')
+    knownFaceNames=files.get_file_name_all('img/known')
     print (knownFaceNames)
 
     snapTaken=False
     for path in images:
-        knownImage = face_recognition.load_image_file("imgs/"+path)
+        knownImage = face_recognition.load_image_file("img/known/"+path)
         knownFaceEncodings.append(face_recognition.face_encodings(knownImage)[0])
 
 
@@ -97,9 +98,9 @@ def triggerFaceDetection():
             print("sendMail")
             print(sendMail)
             if snapTaken==True and sendMail==True:
-                cv2.imwrite('snaps/snap.jpg',frame)
+                cv2.imwrite('img/snaps/snap.jpg',frame)
                 if name is not "Unrecognized":
-                    p = multiprocessing.Process(target=mail.mail, args=('snaps',name+"is at your door !"))
+                    p = multiprocessing.Process(target=mail.mail, args=('img/snaps',name+"is at your door !"))
                     p.start()
                     #mail.mail('snaps',name+"is at your door!")
                     endTimeKnownface=datetime.now() + timedelta(seconds=30)
@@ -121,8 +122,6 @@ def triggerFaceDetection():
 
     video_capture.release()
     cv2.destroyAllWindows()
-    
-triggerFaceDetection()
 
 
     

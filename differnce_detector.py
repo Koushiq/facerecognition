@@ -84,8 +84,6 @@ def triggerCam():
     cap.release()
     cv2.destroyAllWindows()
 
-p1 = multiprocessing.Process(target=triggerCam)
-p1.start()
 
 
 
