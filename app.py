@@ -24,7 +24,7 @@ def switchOn():
     label1 = tk.Label(frame,text="In Secure Mode", pady=50,fg="#b50000",bg="white")
     label1.config(font=("Calibri",24))
     label1.pack()
-    stop = tk.Button(frame,text="Stop", padx=10 , pady=5, fg="white", bg="grey", command=stopMode)
+    stop = tk.Button(frame,text="Back", padx=10 , pady=5, fg="white", bg="grey", command=stopMode)
     stop.place(x=215, y=90)
 def switchOff():
     for widget in frame.winfo_children():
@@ -34,7 +34,7 @@ def switchOff():
     label2 = tk.Label(frame,text="In Default Mode", pady=50, fg="#002ae3",bg="white")
     label2.config(font=("Calibri", 24))
     label2.pack()
-    stop = tk.Button(frame,text="Stop", padx=10 , pady=5, fg="white", bg="grey", command=stopMode)
+    stop = tk.Button(frame,text="Back", padx=10 , pady=5, fg="white", bg="grey", command=stopMode)
     stop.place(x=215, y=90)
 def add():
     msg2.set("")
@@ -130,12 +130,69 @@ def viewImages():
         im = im.resize((w,h))
         res_list.append(im)
         
+    global photo
     photo = ImageTk.PhotoImage(res_list[0])
+    
+    global label7
     label7 = tk.Label(frame4,image=photo)
     label7.image = photo
-    label7.place(x=140,y=50)
-    prev = tk.Button(root,text="View Known", padx=10 , pady=5, fg="white", bg="grey", command=viewImages)
-    prev.place(x=190, y=130)
+    label7.place(x=140,y=20)
+    
+    global prevbtn
+    prevbtn = tk.Button(frame4,text="<<", padx=10 , pady=5, fg="white", bg="grey", command=prevImg)
+    prevbtn.place(x=140, y=445)
+    
+    remove = tk.Button(frame4,text="Delete Known", padx=10 , pady=5, fg="white", bg="grey", command=removeImg)
+    remove.place(x=195, y=445)
+    
+    global nextbtn
+    nextbtn = tk.Button(frame4,text=">>", padx=10 , pady=5, fg="white", bg="grey", command=lambda: nextImg(1,frame4))
+    nextbtn.place(x=320, y=445)
+    
+def prevImg(num,frame):
+    try:
+        global label7
+        global photo
+        global prevbtn
+        global nextbtn
+        
+        label7.place_forget()
+        photo = ImageTk.PhotoImage(res_list[num])
+        label7 = tk.Label(frame,image=photo)
+        label7.image = photo
+        label7.place(x=140,y=20)
+        nextbtn = tk.Button(frame,text=">>", padx=10 , pady=5, fg="white", bg="grey", command=lambda: nextImg(num+1,frame))
+        nextbtn.place(x=320, y=445)
+        prevbtn = tk.Button(frame,text="<<", padx=10 , pady=5, fg="white", bg="grey", command=lambda: prevImg(num-1,frame))
+        prevbtn.place(x=140, y=445)
+    except:
+        label8 = tk.Label(frame,text="No more known faces",bg="white",fg="red")
+        label8.config(font=("Calibri", 12))
+        label8.place(x=190, y=230)
+        
+def nextImg(num,frame):
+    try:
+        global label7
+        global photo
+        global prevbtn
+        global nextbtn
+        
+        label7.place_forget()
+        photo = ImageTk.PhotoImage(res_list[num])
+        label7 = tk.Label(frame,image=photo)
+        label7.image = photo
+        label7.place(x=140,y=20)
+        nextbtn = tk.Button(frame,text=">>", padx=10 , pady=5, fg="white", bg="grey", command=lambda: nextImg(num+1,frame))
+        nextbtn.place(x=320, y=445)
+        prevbtn = tk.Button(frame,text="<<", padx=10 , pady=5, fg="white", bg="grey", command=lambda: prevImg(num-1,frame))
+        prevbtn.place(x=140, y=445)
+    except:
+        label8 = tk.Label(frame,text="No more known faces",bg="white",fg="red")
+        label8.config(font=("Calibri", 12))
+        label8.place(x=190, y=230)
+
+def removeImg():
+    print("testing...")
 
 canvas = tk.Canvas(root,height=200,width=500,bg="grey")
 canvas.pack()
