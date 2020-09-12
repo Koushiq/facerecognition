@@ -4,6 +4,7 @@ import get_files
 import shutil
 from PIL import ImageTk,Image
 import glob
+import os
 
 root = tk.Tk()
 root.title("Smart Security Camera")
@@ -141,59 +142,106 @@ def viewImages():
     global prevbtn
     prevbtn = tk.Button(frame4,text="<<", padx=10 , pady=5, fg="white", bg="grey", command=prevImg)
     prevbtn.place(x=140, y=445)
+    prevbtn["state"] = "disabled"
     
-    remove = tk.Button(frame4,text="Delete Known", padx=10 , pady=5, fg="white", bg="grey", command=removeImg)
+    remove = tk.Button(frame4,text="Delete Known", padx=10 , pady=5, fg="white", bg="grey", command=lambda: removeImg(0,frame4))
     remove.place(x=195, y=445)
+    remove["state"] = "normal"
     
     global nextbtn
     nextbtn = tk.Button(frame4,text=">>", padx=10 , pady=5, fg="white", bg="grey", command=lambda: nextImg(1,frame4))
     nextbtn.place(x=320, y=445)
     
 def prevImg(num,frame):
+    global label7
+    global photo
+    global prevbtn
+    global nextbtn
+    global remove
+    
     try:
-        global label7
-        global photo
-        global prevbtn
-        global nextbtn
-        
         label7.place_forget()
         photo = ImageTk.PhotoImage(res_list[num])
+        
         label7 = tk.Label(frame,image=photo)
         label7.image = photo
         label7.place(x=140,y=20)
+        
         nextbtn = tk.Button(frame,text=">>", padx=10 , pady=5, fg="white", bg="grey", command=lambda: nextImg(num+1,frame))
         nextbtn.place(x=320, y=445)
+        
         prevbtn = tk.Button(frame,text="<<", padx=10 , pady=5, fg="white", bg="grey", command=lambda: prevImg(num-1,frame))
         prevbtn.place(x=140, y=445)
+        
+        remove = tk.Button(frame,text="Delete Known", padx=10 , pady=5, fg="white", bg="grey", command=lambda: removeImg(num,frame))
+        remove.place(x=195, y=445)
+        
+        if num <= 0:
+            prevbtn["state"] = "disabled"
+            print(prevbtn["state"])
+        
     except:
         label8 = tk.Label(frame,text="No more known faces",bg="white",fg="red")
         label8.config(font=("Calibri", 12))
-        label8.place(x=190, y=230)
+        label8.place(x=180, y=230)
         
 def nextImg(num,frame):
+    global label7
+    global photo
+    global prevbtn
+    global nextbtn
+    global remove
+    
     try:
-        global label7
-        global photo
-        global prevbtn
-        global nextbtn
-        
         label7.place_forget()
         photo = ImageTk.PhotoImage(res_list[num])
+        
         label7 = tk.Label(frame,image=photo)
         label7.image = photo
         label7.place(x=140,y=20)
+        
         nextbtn = tk.Button(frame,text=">>", padx=10 , pady=5, fg="white", bg="grey", command=lambda: nextImg(num+1,frame))
         nextbtn.place(x=320, y=445)
+        
         prevbtn = tk.Button(frame,text="<<", padx=10 , pady=5, fg="white", bg="grey", command=lambda: prevImg(num-1,frame))
         prevbtn.place(x=140, y=445)
+        
+        remove = tk.Button(frame,text="Delete Known", padx=10 , pady=5, fg="white", bg="grey", command=lambda: removeImg(num,frame))
+        remove.place(x=195, y=445)
+        
+        if num <= 0:
+            prevbtn["state"] = "disabled"
+            print(prevbtn["state"])
     except:
         label8 = tk.Label(frame,text="No more known faces",bg="white",fg="red")
         label8.config(font=("Calibri", 12))
-        label8.place(x=190, y=230)
+        label8.place(x=180, y=230)
+        prevbtn = tk.Button(frame,text="<<", padx=10 , pady=5, fg="white", bg="grey", command=lambda: prevImg(num-1,frame))
+        prevbtn.place(x=140, y=445)
+        
+        if num >= len(res_list):
+            remove["state"] = "disabled"
 
-def removeImg():
-    print("testing...")
+def removeImg(num,frame):
+    global label7
+    global photo
+    global nextbtn
+    global remove
 
+    try:
+        im = image_list[num].filename
+        os.remove(im)
+        label7.place_forget()
+        del res_list[num]
+            
+        label9 = tk.Label(frame,text="Known Face Deleted",bg="white",fg="red")
+        label9.config(font=("Calibri", 12))
+        label9.place(x=185, y=250)
+    except:
+        label9 = tk.Label(frame,text="Oops! Something Went Wrong!",bg="white",fg="red")
+        label9.config(font=("Calibri", 12))
+        label9.place(x=150, y=250)
+        
 canvas = tk.Canvas(root,height=200,width=500,bg="grey")
 canvas.pack()
 
