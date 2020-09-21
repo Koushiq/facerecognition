@@ -17,6 +17,10 @@ msg = tk.StringVar()
 msg2 = tk.StringVar()
 image_list = []
 res_list = []
+mymail = tk.StringVar()
+pw = tk.StringVar()
+sysmail = tk.StringVar()
+
 def switchOn():
     for widget in frame.winfo_children():
         widget.destroy()
@@ -241,7 +245,46 @@ def removeImg(num,frame):
         label9 = tk.Label(frame,text="Oops! Something Went Wrong!",bg="white",fg="red")
         label9.config(font=("Calibri", 12))
         label9.place(x=150, y=250)
-        
+def setMail():
+    newWindow4 = tk.Toplevel(root)
+    newWindow4.title("Set Sender & Reciever Email")
+    newWindow4.resizable(False, False)
+    newWindow4.geometry("+150+200")
+    canvas4 = tk.Canvas(newWindow4,height=200,width=500,bg="white")
+    canvas4.pack()
+    frame5 = tk.Frame(newWindow4,bg="white")
+    frame5.place(relwidth=1, relheight=1)
+    label10 = tk.Label(frame5,text="Your Email: ",bg="white")
+    label10.config(font=("Calibri", 16))
+    label10.place(x=120, y=20)
+    text2 = ttk.Entry(frame5,width=15,textvariable=mymail)
+    text2.place(x=230, y=20)
+    label11 = tk.Label(frame5,text="Password: ",bg="white")
+    label11.config(font=("Calibri", 16))
+    label11.place(x=130, y=50)
+    text3 = ttk.Entry(frame5,width=15,textvariable=pw)
+    text3.place(x=230, y=50)
+    label12 = tk.Label(frame5,text="Sender Email: ",bg="white")
+    label12.config(font=("Calibri", 16))
+    label12.place(x=110, y=80)
+    text4 = ttk.Entry(frame5,width=15,textvariable=sysmail)
+    text4.place(x=240, y=80)
+    submit = tk.Button(frame5,text="Submit", padx=10 , pady=5, fg="white", bg="grey", command=lambda:submitMail(frame5))
+    submit.place(x=200, y=110)
+    label5 = tk.Label(frame5,textvariable=msg,bg="white",fg="red")
+    label5.config(font=("Calibri", 12))
+    label5.place(x=200, y=150)
+def submitMail(frame):
+    try:
+        #here you can access the email credentials and sender email
+        mail = mymail.get()
+        password = pw.get()
+        smail = sysmail.get()
+        msg.set(mymail.get()+" "+pw.get()+" "+sysmail.get())
+        print(msg.get())
+    except:
+        msg.set("Something went wrong!")
+        print(msg.get())
 canvas = tk.Canvas(root,height=200,width=500,bg="grey")
 canvas.pack()
 
@@ -259,12 +302,15 @@ modeOff = tk.Button(root,text="Default Mode", padx=10 , pady=5, fg="white", bg="
 modeOff.place(x=250, y=90)
 
 addKnown = tk.Button(root,text="Add Known", padx=10 , pady=5, fg="white", bg="grey", command=add)
-addKnown.place(x=80, y=130)
+addKnown.place(x=30, y=130)
 
 viewKnown = tk.Button(root,text="View Known", padx=10 , pady=5, fg="white", bg="grey", command=viewImages)
-viewKnown.place(x=190, y=130)
+viewKnown.place(x=137, y=130)
 
 delay = tk.Button(root,text="Select Delay", padx=10 , pady=5, fg="white", bg="grey", command=selectDelay)
-delay.place(x=305, y=130)
+delay.place(x=250, y=130)
+
+setEmail = tk.Button(root,text="Set Email", padx=10 , pady=5, fg="white", bg="grey", command=setMail)
+setEmail.place(x=366, y=130)
 
 root.mainloop()
