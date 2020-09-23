@@ -6,19 +6,36 @@ from email.policy import SMTP
 
 
 def mail(path,title):
+    
+    sender = open('senderemail.txt','r')
+    sender = sender.read()
+    
+    
+    
+    senderpassword = open('senderemailpassword.txt','r')
+    senderpassword = senderpassword.read()
+    
+    receiver = open('receiveremail.txt','r')
+    receiver = receiver.read()
+    
+    print("sender "+sender)
+    print("password "+senderpassword)
+    print("receiver "+receiver)
+    
+    
     SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
     SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
     #insert sender credentials here
-    GMAIL_USERNAME = os.environ.get('GMAIL_USERNAME', 'koushiq12345@gmail.com')
-    GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD', '')
+    GMAIL_USERNAME = os.environ.get('GMAIL_USERNAME', sender)
+    GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD', senderpassword)
     directory = path
 
     # Create the message
     msg = EmailMessage()
     msg['Subject'] = title
     #insert sender receiver here 
-    msg['To'] = 'koushiq1234@gmail.com'
-    msg['From'] = 'koushiq12345@gmail.com'
+    msg['To'] = receiver
+    msg['From'] = sender
     msg.preamble = 'You will not see this in a MIME-aware mail reader.\n'
 
     for filename in os.listdir(directory):
