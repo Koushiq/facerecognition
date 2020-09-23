@@ -23,8 +23,8 @@ def switchOn():
     label1 = tk.Label(frame,text="In Secure Mode", pady=50,fg="#b50000",bg="white")
     label1.config(font=("Calibri",24))
     label1.pack()
-    #stop = tk.Button(frame,text="Stop", padx=10 , pady=5, fg="white", bg="grey", command=stopMode)
-    #stop.place(x=215, y=90)
+    stop = tk.Button(frame,text="Stop", padx=10 , pady=5, fg="white", bg="grey", command=stopMode)
+    stop.place(x=215, y=90)
     differnce_detector.triggerCam()
     
 def switchOff():
@@ -35,8 +35,8 @@ def switchOff():
     label2 = tk.Label(frame,text="In Default Mode", pady=50, fg="#002ae3",bg="white")
     label2.config(font=("Calibri", 24))
     label2.pack()
-    #stop = tk.Button(frame,text="Stop", padx=10 , pady=5, fg="white", bg="grey", command=stopMode)
-    #stop.place(x=215, y=90)
+    stop = tk.Button(frame,text="Stop", padx=10 , pady=5, fg="white", bg="grey", command=stopMode)
+    stop.place(x=215, y=90)
     recogniser.triggerFaceDetection()
     
 def add():

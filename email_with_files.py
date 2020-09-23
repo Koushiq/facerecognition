@@ -10,7 +10,7 @@ def mail(path,title):
     SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
     #insert sender credentials here
     GMAIL_USERNAME = os.environ.get('GMAIL_USERNAME', 'koushiq12345@gmail.com')
-    GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD', '*******')
+    GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD', '')
     directory = path
 
     # Create the message

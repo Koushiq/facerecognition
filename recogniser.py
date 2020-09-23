@@ -106,7 +106,7 @@ def triggerFaceDetection():
                     endTimeKnownface=datetime.now() + timedelta(seconds=30)
                     #print(endTimeKnownface)
                 else:
-                    p = multiprocessing.Process(target=mail.mail, args=('snaps',"An Possible Unknown Person is at your door "))
+                    p = multiprocessing.Process(target=mail.mail, args=('img/snaps',"An Possible Unknown Person is at your door "))
                     p.start()
                     #mail.mail('snaps',name+"is at your door!")
                     endTimeKnownface=datetime.now() + timedelta(seconds=15)
@@ -123,6 +123,7 @@ def triggerFaceDetection():
     video_capture.release()
     cv2.destroyAllWindows()
 
+#triggerFaceDetection();
 
     
 
